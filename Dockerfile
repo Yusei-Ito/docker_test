@@ -1,5 +1,5 @@
 # ベースイメージ（Ubuntuを使用）
-FROM artifactory.stargate.toyota/docker-remote/library/ubuntu:22.04
+FROM jp1-artifactory.stargate.toyota/docker-remote/library/ubuntu:22.04
 
 # パッケージ更新と基本ツールのインストール
 RUN apt-get update && apt-get install -y \
