@@ -1,19 +1,10 @@
-FROM ubuntu:22.04
+# まずビルド用イメージ
+FROM gcc:12 AS builder
+WORKDIR /src
+RUN echo '#include <stdio.h>\nint main(){printf("Hello, World!\\n");return 0;}' > hello.c
+RUN gcc hello.c -static -o hello
 
-# パッケージ更新と基本ツールのインストール
-RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip \
-    && rm -rf /var/lib/apt/lists/*
-
-# 作業ディレクトリ
-WORKDIR /app
-
-# ソースコードをコンテナにコピー
-COPY . /app
-
-# Python依存関係をインストール（requirements.txtがある場合）
-RUN pip3 install --no-cache-dir -r requirements.txt
-
-# デフォルトコマンド
-CMD ["python3", "main.py"]
+# 実行用は scratch（ベースなし）
+FROM scratch
+COPY --from=builder /src/hello /hello
+CMD ["/hello"]
